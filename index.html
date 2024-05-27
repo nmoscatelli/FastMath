@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastMath</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="container">
+    <h1>FastMath</h1>
+
+    <p class="text">Elige la operación: <br>(Suma por defecto) </p>
+        <button class="mathB" onclick="mathPlus()" id="startButton">Suma</button>
+        <button class="mathB" onclick="mathRed()">Resta</button>
+        <button class="mathB" onclick="mathMult()">Mult</button>
+        <button class="mathB" onclick="mathDiv()">División</button>
+    
+    <br> <br>
+    <p class="text">Elige la cantidad de dígitos:</p>
+    <p class="digitSelector">
+        <button class="digitButton" onclick="digitB(); digit=10; generateMath()">1</button>
+        <button class="digitButton" onclick="digitB(); digit=100; generateMath()">2</button>
+        <button class="digitButton" onclick="digitB(); digit=1000; generateMath()">3</button>
+        <button class="digitButton" onclick="digitB(); digit=10000; generateMath()">4</button>
+        <button class="digitButton" onclick="digitB(); digit=100000; generateMath()">5</button>
+    </p>
+
+    <br>
+
+    <div id="cuenta">
+        <p>Cuenta: </p>
+    </div>
+
+    <p class="text">Resultado:
+    <input type="number" placeholder="Resultado" id="inputResult" class="inR">
+    <button onclick="testMath()" id="check">COMPROBAR</button>
+    </p>
+
+    <p id="score" class="text">Racha: 0</p>
+
+</div>
+</body>
+
+<script>
+/* Inicialización variables */
+let num1 = 0;
+let num2 = 0;
+let math = '+';
+let result = 0;
+let digit = 0;
+let aux = 0;
+let score = 0;
+
+/* Inicio funciones para que Suma aparezca ya marcado */
+function seleccionBotonIni(startButton) {
+    const startBut = document.getElementById(startButton);
+    startBut.click();
+}
+window.addEventListener('DOMContentLoaded', () => {
+    seleccionBotonIni('startButton');
+})
+/* Fin funciones para que Suma aparezca ya marcado */
+
+
+/* Elección de la cuenta */
+function mathPlus() {
+    math = '+';
+    backgroundButton();
+}
+function mathRed() {
+    math = '-';
+    backgroundButton();
+}
+function mathMult() {
+    math = 'x';
+    backgroundButton();
+}
+function mathDiv() {
+    math = '/';
+    backgroundButton();
+}
+
+/* Función para poner el color de cada botón */
+function backgroundButton() {
+    const botones = document.querySelectorAll('.mathB');
+    botones.forEach(boton => {
+        boton.style.backgroundColor= '';
+        boton.style.color = '';
+    });
+    event.target.style.backgroundColor = '#008DDA';
+    event.target.style.color = 'white';
+}
+
+function digitB() {
+    const botones = document.querySelectorAll('.digitButton');
+    botones.forEach(boton => {
+        boton.style.backgroundColor= '';
+        boton.style.color = '';
+    });
+    event.target.style.backgroundColor = '#008DDA';
+    event.target.style.color = 'white';
+}
+
+/* Método escritura de cuenta */
+function generateMath() {
+    num1 = Math.floor(Math.random()*digit+1);
+    num2 = Math.floor(Math.random()*digit+1);
+
+    switch(math) {
+        case '+':
+            result = num1 + num2;
+            break;
+        case '-':
+            /* n1 mayor a n2 para que salga siempre positivo*/
+            aux = Math.min(num1, num2);
+            num1 = Math.max(num1, num2);
+            num2 = aux; 
+            result = num1 - num2;
+            break;
+        case 'x':
+            result = num1 * num2;
+            break;
+        case '/':
+            /* Cambio en las operaciones para que sean números enteros*/
+            /* num1 va a estar entre 2 y 20 así la división es más fácil a mayor cantidad de dígitos 
+            (sino quedarían números demasiado grandes) */
+            num1 = Math.floor(Math.random()*18+2);
+            aux = num1;
+            num1 = num1 * num2;
+            result = num1 / num2;
+            break;
+    }
+
+    document.getElementById('cuenta').innerHTML='Cuenta: ' + num1 + " " + math + " " + num2;
+}
+
+/* Método de comprobación de cuenta */
+function testMath() {
+    if (inputResult.value == result) {
+        // document.getElementById('cuenta').innerHTML=inputResult.value;
+        generateMath();
+        score++;
+        document.getElementById('score').innerHTML='Racha: ' + score;
+        document.querySelector('.inR').value = '';
+        check.classList.add('success');
+        setTimeout(()=>{
+            check.classList.remove('success');
+        }, 500)
+    } else {
+        score = 0;
+        document.getElementById('score').innerHTML='Racha: ' + score;
+        document.querySelector('.inR').value = '';
+        check.classList.add('error');
+        setTimeout(()=>{
+            check.classList.remove('error');
+        }, 500)
+    }
+} 
+
+</script>
+
+</html>
